@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Helmet Dashboard - Refactored
 
-## Getting Started
+This is a refactored version of the Smart Helmet Dashboard application using a modular component-based architecture with the Next.js App Router.
 
-First, run the development server:
+## Architecture Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The application has been refactored from a monolithic structure to a modular architecture:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `components/auth/` - Authentication-related components (LoginView, RegisterView)
+- `components/dashboard/` - Dashboard view components (DashboardView, LiveView, AnalysisView, HistoryView)
+- `components/layout/` - Layout components (Sidebar, DashboardLayout)
+- `components/ui/` - Reusable UI components (LoadingSpinner, ErrorBox)
+- `hooks/` - Custom React hooks (useAuth, useHelmetData)
+- `types/` - TypeScript type definitions
+- `app/` - Next.js App Router pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Authentication**: Secure login and registration with JWT token management
+- **Dashboard**: Real-time helmet monitoring and analytics
+- **Live Data**: Live telemetry data display
+- **Analysis**: Data analytics with charts and visualizations
+- **History**: Accident history tracking with filtering
+- **Responsive Design**: Mobile-friendly interface
 
-## Learn More
+## Setup Instructions
 
-To learn more about Next.js, take a look at the following resources:
+1. **Install Dependencies**:
+   ```bash
+   cd frontend
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Environment Variables**:
+   Copy `.env.example` to `.env.local` and update the `NEXT_PUBLIC_API_BASE` to match your backend server:
+   ```bash
+   NEXT_PUBLIC_API_BASE=http://localhost:8000
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Start the Backend**:
+   ```bash
+   cd backend
+   python main.py
+   ```
 
-## Deploy on Vercel
+4. **Start the Frontend**:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Error Handling
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application includes robust error handling for network issues:
+
+- Network connection errors are caught and displayed gracefully
+- Invalid tokens are automatically cleared
+- Retry mechanisms for failed requests
+- User-friendly error messages
+
+## Custom Hooks
+
+- `useAuth`: Manages authentication state, login, registration, and token handling
+- `useHelmetData`: Handles fetching helmet data, events, and trips with error handling
+
+## Component Structure
+
+- Each major view is now in its own component file
+- Shared UI elements are in the `components/ui` directory
+- Layout components are in the `components/layout` directory
+- Authentication components are in the `components/auth` directory
+- Dashboard-specific components are in the `components/dashboard` directory
+
+## API Integration
+
+The application uses Axios with interceptors for:
+- Automatic token attachment to requests
+- Error handling for network issues
+- Token refresh on 401 responses
+- Consistent error messaging
+
+## Security Considerations
+
+- JWT tokens are stored in localStorage
+- Authentication state is validated on each page load
+- Protected routes are enforced through the dashboard layout
+- Network requests have timeout and error handling
