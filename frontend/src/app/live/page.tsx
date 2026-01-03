@@ -42,7 +42,7 @@ const LivePage = () => {
       <div className="space-y-6">
         {(authError || dataError) && (
           <ErrorBox
-            error={authError || dataError || ''}
+            error={(authError || dataError || '') as string}
             onRetry={() => {
               if (authError) {
                 // Try to refetch user

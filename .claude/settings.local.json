@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir -p frontendsrccomponentsauth frontendsrccomponentsdashboard frontendsrccomponentslayout frontendsrccomponentsui frontendsrchooks frontendsrctypes)"
+      "Bash(mkdir -p frontendsrccomponentsauth frontendsrccomponentsdashboard frontendsrccomponentslayout frontendsrccomponentsui frontendsrchooks frontendsrctypes)",
+      "Bash(npm run build)",
+      "Bash(npm audit)"
     ]
   }
 }

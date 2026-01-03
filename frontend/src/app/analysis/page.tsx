@@ -38,7 +38,7 @@ const AnalysisPage = () => {
       <div className="space-y-6">
         {authError && (
           <ErrorBox
-            error={authError}
+            error={authError || ''}
             onRetry={() => {
               // Try to refetch user
               useAuth().refetchUser();

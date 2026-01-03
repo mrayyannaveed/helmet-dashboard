@@ -39,7 +39,7 @@ const RegisterPage = () => {
         onRegister={handleRegister}
         onGoLogin={() => router.push('/login')}
         loading={authLoading}
-        error={authError || registerError}
+        error={authError || registerError || undefined}
       />
     </div>
   );
