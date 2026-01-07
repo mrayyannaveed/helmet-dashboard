@@ -3,7 +3,8 @@
     "allow": [
       "Bash(mkdir -p frontendsrccomponentsauth frontendsrccomponentsdashboard frontendsrccomponentslayout frontendsrccomponentsui frontendsrchooks frontendsrctypes)",
       "Bash(npm run build)",
-      "Bash(npm audit)"
+      "Bash(npm audit)",
+      "Bash(python -c \"from main import app; print\\(''Backend imports successfully''\\)\")"
     ]
   }
 }
