@@ -1,0 +1,150 @@
+# API Contract: ESP32 Connection Endpoints
+
+## Overview
+This document defines the API contracts for ESP32 microcontroller connections to the Smart Helmet backend.
+
+## Authentication
+ESP32 devices use device-specific tokens for authentication, separate from user JWT tokens.
+- Header: `Authorization: Bearer <device-token>`
+- Tokens are issued during device registration
+
+## Endpoints
+
+### POST /api/esp32/data
+Receives sensor data from ESP32 devices.
+
+#### Request
+- Method: POST
+- Path: `/api/esp32/data`
+- Headers:
+  - `Authorization: Bearer <device-token>`
+  - `Content-Type: application/json`
+- Body:
+```json
+{
+  "sensor_type": "ACCELEROMETER|GYROSCOPE|TEMPERATURE|OTHER",
+  "x_value": 0.0,
+  "y_value": 0.0,
+  "z_value": 0.0,
+  "raw_value": 0.0,
+  "battery_level": 85,
+  "signal_strength": -55
+}
+```
+
+#### Response
+- 200 OK: Data successfully received and stored
+```json
+{
+  "status": "success",
+  "received_at": "2026-01-07T10:30:00Z",
+  "data_id": "uuid-of-stored-data"
+}
+```
+- 400 Bad Request: Invalid data format
+```json
+{
+  "error": "invalid_data_format",
+  "message": "Required fields missing or invalid values"
+}
+```
+- 401 Unauthorized: Invalid or expired device token
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid device token"
+}
+```
+- 429 Too Many Requests: Rate limit exceeded
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Too many requests from this device"
+}
+```
+
+### GET /api/esp32/status
+Retrieves the current status of an ESP32 device.
+
+#### Request
+- Method: GET
+- Path: `/api/esp32/status`
+- Headers:
+  - `Authorization: Bearer <device-token>`
+
+#### Response
+- 200 OK: Status successfully retrieved
+```json
+{
+  "status": "active",
+  "last_seen": "2026-01-07T10:25:00Z",
+  "battery_level": 85,
+  "connected_via": "wifi"
+}
+```
+- 401 Unauthorized: Invalid device token
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid device token"
+}
+```
+
+### POST /api/devices/register
+Registers a new ESP32 device with the system (admin/user endpoint).
+
+#### Request
+- Method: POST
+- Path: `/api/devices/register`
+- Headers:
+  - `Authorization: Bearer <user-jwt-token>`
+  - `Content-Type: application/json`
+- Body:
+```json
+{
+  "device_id": "unique-device-identifier",
+  "helmet_id": "uuid-of-associated-helmet"
+}
+```
+
+#### Response
+- 201 Created: Device successfully registered
+```json
+{
+  "device_id": "unique-device-identifier",
+  "auth_token": "generated-device-auth-token",
+  "helmet_id": "uuid-of-associated-helmet"
+}
+```
+- 400 Bad Request: Invalid registration data
+- 401 Unauthorized: Invalid user token
+- 403 Forbidden: Insufficient permissions
+
+### PUT /api/esp32/config
+Updates configuration for an ESP32 device.
+
+#### Request
+- Method: PUT
+- Path: `/api/esp32/config`
+- Headers:
+  - `Authorization: Bearer <device-token>`
+  - `Content-Type: application/json`
+- Body:
+```json
+{
+  "transmission_interval": 5000,
+  "sensitivity_threshold": 2.0,
+  "report_battery": true
+}
+```
+
+#### Response
+- 200 OK: Configuration updated successfully
+```json
+{
+  "status": "config_updated",
+  "applied_at": "2026-01-07T10:30:00Z"
+}
+```
+- 400 Bad Request: Invalid configuration values
+- 401 Unauthorized: Invalid device token
